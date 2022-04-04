@@ -7,7 +7,9 @@ class Clock extends React.Component {
     this.state = { date: new Date(), data: [] };
   }
   componentDidMount() {
-    this.click();
+    setInterval(() => {
+      this.click();
+    }, 1000);
   }
   click = () => {
     let that = this;
