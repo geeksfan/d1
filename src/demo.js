@@ -9,7 +9,7 @@ class Clock extends React.Component {
   componentDidMount() {
     setInterval(() => {
       this.click();
-    }, 60000);
+    }, 300000);
   }
   click = () => {
     let that = this;
