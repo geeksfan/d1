@@ -74,7 +74,7 @@ const mainAssetRoute = new workbox.routing.Route(
 );
 const cssAssetRoute = new workbox.routing.Route(
   ({ request }) => {
-    return request.destination === '	stylesheet';
+    return request.destination === '	style';
   },
   new workbox.strategies.CacheFirst({
     cacheName: 'css-assets',
