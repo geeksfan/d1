@@ -58,7 +58,9 @@ importScripts(
 
 const htmlAssetRoute = new workbox.routing.Route(
   ({ request }) => {
-    return request.destination === 'document';
+    return (
+      request.destination === 'document' || request.destination === '	stylesheet'
+    );
   },
   new workbox.strategies.CacheFirst({
     cacheName: 'html-assets',
