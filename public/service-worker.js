@@ -49,57 +49,45 @@
 importScripts(
   'https://storage.googleapis.com/workbox-cdn/releases/6.2.0/workbox-sw.js'
 );
+console.log('self', self.__WB_MANIFEST);
+workbox.precaching.precacheAndRoute(
+  self.__WB_MANIFEST ? self.__WB_MANIFEST : []
+);
+workbox.navigationPreload.enable();
 
-// const navigationRoute = new workbox.routing.NavigationRoute(
-//   new workbox.strategies.NetworkFirst({
-//     cacheName: 'navigations',
+const navigationRoute = new workbox.routing.NavigationRoute(
+  new workbox.strategies.NetworkFirst({
+    cacheName: 'navigations',
+  })
+);
+
+// const htmlAssetRoute = new workbox.routing.Route(
+//   ({ request }) => {
+//     return request.destination === 'document';
+//   },
+//   new workbox.strategies.networkFirst({
+//     cacheName: 'html-assets',
 //   })
 // );
 
-const htmlAssetRoute = new workbox.routing.Route(
+const staticAssetsRoute = new workbox.routing.Route(
   ({ request }) => {
-    return request.destination === 'document';
+    return ['image', 'script', 'style'].includes(request.destination);
   },
-  new workbox.strategies.CacheFirst({
-    cacheName: 'html-assets',
-  })
-);
-const mainAssetRoute = new workbox.routing.Route(
-  ({ request }) => {
-    return request.destination === 'manifest';
-  },
-  new workbox.strategies.CacheFirst({
-    cacheName: 'main-assets',
-  })
-);
-const cssAssetRoute = new workbox.routing.Route(
-  ({ request }) => {
-    return request.destination === 'style';
-  },
-  new workbox.strategies.CacheFirst({
-    cacheName: 'css-assets',
-  })
-);
-const imageAssetRoute = new workbox.routing.Route(
-  ({ request }) => {
-    return request.destination === 'image';
-  },
-  new workbox.strategies.CacheFirst({
-    cacheName: 'image-assets',
-  })
-);
-const staticAssetRoute = new workbox.routing.Route(
-  ({ request }) => {
-    console.log('🚀 ~ file: service-worker.js ~ line 69 ~ request', request);
-    return request.destination === 'script';
-  },
-  new workbox.strategies.CacheFirst({
-    cacheName: 'js-assets',
+  new workbox.strategies.StaleWhileRevalidate({
+    cacheName: 'static-assets',
   })
 );
 
-workbox.routing.registerRoute(htmlAssetRoute);
-workbox.routing.registerRoute(imageAssetRoute);
-workbox.routing.registerRoute(staticAssetRoute);
-workbox.routing.registerRoute(mainAssetRoute);
-workbox.routing.registerRoute(cssAssetRoute);
+// const mainAssetRoute = new workbox.routing.Route(
+//   ({ request }) => {
+//     return request.destination === 'manifest';
+//   },
+//   new workbox.strategies.cacheFirst({
+//     cacheName: 'main-assets',
+//   })
+// );
+
+workbox.routing.registerRoute(navigationRoute);
+workbox.routing.registerRoute(staticAssetsRoute);
+// workbox.routing.registerRoute(mainAssetRoute);
