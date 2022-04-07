@@ -58,12 +58,26 @@ importScripts(
 
 const htmlAssetRoute = new workbox.routing.Route(
   ({ request }) => {
-    return (
-      request.destination === 'document' || request.destination === '	stylesheet'
-    );
+    return request.destination === 'document';
   },
   new workbox.strategies.CacheFirst({
     cacheName: 'html-assets',
+  })
+);
+const mainAssetRoute = new workbox.routing.Route(
+  ({ request }) => {
+    return request.destination === 'manifest';
+  },
+  new workbox.strategies.CacheFirst({
+    cacheName: 'main-assets',
+  })
+);
+const cssAssetRoute = new workbox.routing.Route(
+  ({ request }) => {
+    return request.destination === '	stylesheet';
+  },
+  new workbox.strategies.CacheFirst({
+    cacheName: 'css-assets',
   })
 );
 const imageAssetRoute = new workbox.routing.Route(
@@ -87,3 +101,5 @@ const staticAssetRoute = new workbox.routing.Route(
 workbox.routing.registerRoute(htmlAssetRoute);
 workbox.routing.registerRoute(imageAssetRoute);
 workbox.routing.registerRoute(staticAssetRoute);
+workbox.routing.registerRoute(mainAssetRoute);
+workbox.routing.registerRoute(cssAssetRoute);
